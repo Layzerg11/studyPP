@@ -17,13 +17,12 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
     public void createUsersTable() throws SQLException {
         Connection connection = getConnection();
         Statement createTable = connection.createStatement();
-        String sql = "CREATE TABLE instructor ( + ID INT, name VARCHAR(20), lastname VARCHAR(20), age INT, PRIMARY KEY (ID))";
 
         try {
-            createTable.executeUpdate("CREATE TABLE USER"
+            createTable.executeUpdate("CREATE TABLE IF NOT EXISTS USER"
                     + " (ID INTEGER NOT NULL AUTO_INCREMENT, NAME VARCHAR(20), LASTNAME VARCHAR(20), AGE INT, PRIMARY KEY (ID)) ");
-        } catch (SQLSyntaxErrorException e) {
-
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             if (createTable != null) {
                 createTable.close();
@@ -40,9 +39,9 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
         Statement dropTable = connection.createStatement();
 
         try {
-            dropTable.executeUpdate("DROP TABLE USER");
-        } catch (SQLSyntaxErrorException e) {
-
+            dropTable.executeUpdate("DROP TABLE IF EXISTS USER");
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             if (dropTable != null) {
                 dropTable.close();
@@ -118,6 +117,7 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
                 user.setAge(resultSet.getByte("AGE"));
                 userList.add(user);
             }
+            System.out.println(userList);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
